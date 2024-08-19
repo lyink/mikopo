@@ -1,0 +1,49 @@
+<!-- locations/templates/locations/home.html -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Location Tracker</title>
+    <!-- Include Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+    <!-- Include Leaflet Fullscreen CSS -->
+    <link rel="stylesheet" href="https://api.mapbox.com/mapbox.js/plugins/leaflet-fullscreen/v1.0.1/leaflet.fullscreen.css" />
+    <style>
+        #map {
+            height: 500px;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <h2>Location Data</h2>
+    <div id="map"></div>
+
+    <!-- Include Leaflet JS -->
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+    <!-- Include Leaflet Fullscreen JS -->
+    <script src="https://api.mapbox.com/mapbox.js/plugins/leaflet-fullscreen/v1.0.1/Leaflet.fullscreen.min.js"></script>
+    <script>
+        // Initialize the map and set its view to center on Tanzania with a suitable zoom level
+        var map = L.map('map').setView([-6.369028, 34.888822], 6);
+
+        // Add a tile layer to the map (this is a free layer provided by OpenStreetMap)
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 18,
+        }).addTo(map);
+
+        // Add fullscreen control to the map
+        map.addControl(new L.Control.Fullscreen());
+
+        // Add markers for each location
+        {% for location in locations %}
+            L.marker([{{ location.latitude }}, {{ location.longitude }}])
+                .addTo(map)
+                .bindPopup("<b>{{ location.full_name }}</b><br>{{ location.location_address }}")
+                .openPopup();
+        {% endfor %}
+    </script>
+</body>
+</html>
